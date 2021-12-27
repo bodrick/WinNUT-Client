@@ -1,4 +1,4 @@
-﻿' WinNUT-Client is a NUT windows client for monitoring your ups hooked up to your favorite linux server.
+' WinNUT-Client is a NUT windows client for monitoring your ups hooked up to your favorite linux server.
 ' Copyright (C) 2019-2021 Gawindx (Decaux Nicolas)
 '
 ' This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -20,13 +20,6 @@ Public Enum AppIconIdx
     IDX_ICO_VIEWLOG = 2001
     IDX_ICO_DELETELOG = 2002
     IDX_OFFSET = 1024
-End Enum
-
-Public Enum LogLvl
-    LOG_NOTICE
-    LOG_WARNING
-    LOG_ERROR
-    LOG_DEBUG
 End Enum
 
 'Define Resource Str
@@ -67,6 +60,44 @@ Public Enum AppResxStr
     STR_LOG_NUT_FSD
 End Enum
 
+Public Enum LogLvl
+    LOG_NOTICE
+    LOG_WARNING
+    LOG_ERROR
+    LOG_DEBUG
+End Enum
+
+Public Enum Nut_Exception_Value
+
+    <StringValue("Unable to create connection :")>
+    CONNECT_ERROR
+
+    <StringValue("Invalid Username.")>
+    INVALID_USERNAME
+
+    <StringValue("Invalid Password.")>
+    INVALID_PASSWORD
+
+    <StringValue("Access is denied.")>
+    ACCESS_DENIED
+
+    <StringValue("Incorrect login ID / password.")>
+    INVALID_AUTH_DATA
+
+    <StringValue("Authentification errork")>
+    LOGIN_ERROR
+
+    <StringValue("Connection to Nut Host seem broken when querying : ")>
+    SOCKET_BROKEN
+
+    <StringValue("Unknown Login error: ")>
+    UNKNOWN_LOGIN_ERROR
+
+    <StringValue("Unknown UPS Name.")>
+    UNKNOWN_UPS
+
+End Enum
+
 ' Define possible responses according to NUT protcol v1.2
 Public Enum NUTResponse
     OK
@@ -97,27 +128,6 @@ Public Enum NUTResponse
     NORESPONSE
     BEGINLIST
     ENDLIST
-End Enum
-
-Public Enum Nut_Exception_Value
-    <StringValue("Unable to create connection :")>
-    CONNECT_ERROR
-    <StringValue("Invalid Username.")>
-    INVALID_USERNAME
-    <StringValue("Invalid Password.")>
-    INVALID_PASSWORD
-    <StringValue("Access is denied.")>
-    ACCESS_DENIED
-    <StringValue("Incorrect login ID / password.")>
-    INVALID_AUTH_DATA
-    <StringValue("Authentification errork")>
-    LOGIN_ERROR
-    <StringValue("Connection to Nut Host seem broken when querying : ")>
-    SOCKET_BROKEN
-    <StringValue("Unknown Login error: ")>
-    UNKNOWN_LOGIN_ERROR
-    <StringValue("Unknown UPS Name.")>
-    UNKNOWN_UPS
 End Enum
 
 Public Enum UPS_States

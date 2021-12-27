@@ -1,4 +1,4 @@
-﻿' WinNUT-Client is a NUT windows client for monitoring your ups hooked up to your favorite linux server.
+' WinNUT-Client is a NUT windows client for monitoring your ups hooked up to your favorite linux server.
 ' Copyright (C) 2019-2021 Gawindx (Decaux Nicolas)
 '
 ' This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -8,18 +8,19 @@
 ' This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY
 
 Public Module WinNUT_Globals
+    Public AppIcon As Dictionary(Of Integer, System.Drawing.Icon)
+    Public Copyright As String
+    Public Directory_AppData As String
+    Public GitHubURL As String
+    Public IsConnected As Boolean
+    Public LogFile As String
+    Public LogFilePath As String
     Public LongProgramName As String
     Public ProgramName As String
     Public ProgramVersion As String
     Public ShortProgramVersion As String
-    Public GitHubURL As String
-    Public Copyright As String
-    Public Directory_AppData As String
-    Public IsConnected As Boolean
-    Public LogFile As String
-    Public AppIcon As Dictionary(Of Integer, System.Drawing.Icon)
     Public StrLog As New List(Of String)
-    Public LogFilePath As String
+
     Public Sub Init_Globals()
         LongProgramName = My.Application.Info.Description
         ProgramName = My.Application.Info.ProductName
@@ -61,7 +62,7 @@ Public Module WinNUT_Globals
         'Add Shutdown Gui's Strings
         'StrLog.Insert(AppResxStr.STR_SHUT_STAT, Resources.Frm_Shutdown_Str_01)
 
-        'Add App Event's Strings 
+        'Add App Event's Strings
         'StrLog.Insert(AppResxStr.STR_APP_SHUT, Resources.App_Event_Str_01)
 
         'Add Log's Strings

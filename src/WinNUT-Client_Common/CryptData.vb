@@ -1,4 +1,4 @@
-﻿' WinNUT-Client is a NUT windows client for monitoring your ups hooked up to your favorite linux server.
+' WinNUT-Client is a NUT windows client for monitoring your ups hooked up to your favorite linux server.
 ' Copyright (C) 2019-2021 Gawindx (Decaux Nicolas)
 '
 ' This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -7,34 +7,40 @@
 '
 ' This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY
 
+Imports System.Management
 Imports System.Security.Cryptography
 Imports System.Text
-Imports System.Management
-
 
 Public NotInheritable Class CryptData
-    Private TripleDes As New TripleDESCryptoServiceProvider
-    Sub New()
+    Private ReadOnly TripleDes As New TripleDESCryptoServiceProvider
+
+    Public Sub New()
         ' Initialize the crypto provider.
 
         TripleDes.Key = TruncateHash(Get_UniqueKey_Hash(), TripleDes.KeySize \ 8)
         TripleDes.IV = TruncateHash("", TripleDes.BlockSize \ 8)
     End Sub
-    Private Function TruncateHash(ByVal key As String, ByVal length As Integer) As Byte()
 
-        Dim sha1 As New SHA1CryptoServiceProvider
+    Public Function DecryptData(encryptedtext As String) As String
 
-        ' Hash the key.
-        Dim keyBytes() As Byte =
-            System.Text.Encoding.Unicode.GetBytes(key)
-        Dim hash() As Byte = sha1.ComputeHash(keyBytes)
+        ' Convert the encrypted text string to a byte array.
+        Dim encryptedBytes() As Byte = Convert.FromBase64String(encryptedtext)
 
-        ' Truncate or pad the hash.
-        ReDim Preserve hash(length - 1)
-        Return hash
+        ' Create the stream.
+        Dim ms As New System.IO.MemoryStream
+        ' Create the decoder to write to the stream.
+        Dim decStream As New CryptoStream(ms,
+            TripleDes.CreateDecryptor(), System.Security.Cryptography.CryptoStreamMode.Write)
+
+        ' Use the crypto stream to write the byte array to the stream.
+        decStream.Write(encryptedBytes, 0, encryptedBytes.Length)
+        decStream.FlushFinalBlock()
+
+        ' Convert the plaintext stream to a string.
+        Return System.Text.Encoding.Unicode.GetString(ms.ToArray)
     End Function
 
-    Public Function EncryptData(ByVal plaintext As String) As String
+    Public Function EncryptData(plaintext As String) As String
 
         ' An empty string ("") passed as an argument is received as 'Nothing'
         If IsNothing(plaintext) Then
@@ -60,25 +66,7 @@ Public NotInheritable Class CryptData
         Return Convert.ToBase64String(ms.ToArray)
     End Function
 
-    Public Function DecryptData(ByVal encryptedtext As String) As String
-
-        ' Convert the encrypted text string to a byte array.
-        Dim encryptedBytes() As Byte = Convert.FromBase64String(encryptedtext)
-
-        ' Create the stream.
-        Dim ms As New System.IO.MemoryStream
-        ' Create the decoder to write to the stream.
-        Dim decStream As New CryptoStream(ms,
-            TripleDes.CreateDecryptor(), System.Security.Cryptography.CryptoStreamMode.Write)
-
-        ' Use the crypto stream to write the byte array to the stream.
-        decStream.Write(encryptedBytes, 0, encryptedBytes.Length)
-        decStream.FlushFinalBlock()
-
-        ' Convert the plaintext stream to a string.
-        Return System.Text.Encoding.Unicode.GetString(ms.ToArray)
-    End Function
-    Public Function IsCryptedtData(ByVal encryptedtext As String) As Boolean
+    Public Function IsCryptedtData(encryptedtext As String) As Boolean
 
         Try
             ' Convert the encrypted text string to a byte array.
@@ -93,6 +81,7 @@ Public NotInheritable Class CryptData
             Return False
         End Try
     End Function
+
     Private Function Get_UniqueKey_Hash() As String
         Dim Unique_key = GetMotherBoardID() & GetProcessorId()
         Dim hash = New SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(Unique_key))
@@ -117,4 +106,19 @@ Public NotInheritable Class CryptData
         Next
         Return ""
     End Function
+
+    Private Function TruncateHash(key As String, length As Integer) As Byte()
+
+        Dim sha1 As New SHA1CryptoServiceProvider
+
+        ' Hash the key.
+        Dim keyBytes() As Byte =
+            System.Text.Encoding.Unicode.GetBytes(key)
+        Dim hash() As Byte = sha1.ComputeHash(keyBytes)
+
+        ' Truncate or pad the hash.
+        ReDim Preserve hash(length - 1)
+        Return hash
+    End Function
+
 End Class

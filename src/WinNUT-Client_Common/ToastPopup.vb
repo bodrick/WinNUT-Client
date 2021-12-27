@@ -1,4 +1,4 @@
-﻿' WinNUT-Client is a NUT windows client for monitoring your ups hooked up to your favorite linux server.
+' WinNUT-Client is a NUT windows client for monitoring your ups hooked up to your favorite linux server.
 ' Copyright (C) 2019-2021 Gawindx (Decaux Nicolas)
 '
 ' This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -9,11 +9,13 @@
 
 Public Class ToastPopup
     Private Header As String = ""
+
     Public WriteOnly Property ToastHeader() As String
-        Set(ByVal Value As String)
-            Me.Header = Value
+        Set(Value As String)
+            Header = Value
         End Set
     End Property
+
     'Public toastCollectionId As String = "WinNUTToastCollection"
     'Create a toast collection
     'Public Async Sub CreateToastCollection(ByVal IconUri As String)
@@ -34,7 +36,7 @@ Public Class ToastPopup
     'Windows.UI.Notifications.ToastNotificationManager.GetDefault().GetToastCollectionManager().SaveToastCollectionAsync(WinNutToastCollection)
     ' End Sub
 
-    Public Sub SendToast(ByVal ToastParts As String())
+    Public Sub SendToast(ToastParts As String())
         'Get a toast XML template
         Dim TemplateToast As Windows.UI.Notifications.ToastTemplateType
         If ToastParts.Count >= 3 Then
@@ -63,6 +65,7 @@ Public Class ToastPopup
         'toast.Failed += ToastFailed
 
         'Show the toast. Be sure to specify the AppUserModelId on your application's shortcut!
-        Windows.UI.Notifications.ToastNotificationManager.CreateToastNotifier(Me.Header).Show(toast)
+        Windows.UI.Notifications.ToastNotificationManager.CreateToastNotifier(Header).Show(toast)
     End Sub
+
 End Class

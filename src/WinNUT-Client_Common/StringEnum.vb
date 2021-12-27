@@ -1,4 +1,4 @@
-﻿' WinNUT-Client is a NUT windows client for monitoring your ups hooked up to your favorite linux server.
+' WinNUT-Client is a NUT windows client for monitoring your ups hooked up to your favorite linux server.
 ' Copyright (C) 2019-2021 Gawindx (Decaux Nicolas)
 '
 ' This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -10,6 +10,27 @@
 'Original code taken from: https://www.codeguru.com/columns/vb/creating-visual-basic-string-enums.html
 
 Imports System.Reflection
+
+Public NotInheritable Class StringEnum
+
+    Private Sub New()
+    End Sub
+
+    Public Shared Function GetStringValue(value As [Enum]) As String
+        Dim output As String = Nothing
+        Dim type As Type = value.[GetType]()
+        Dim fi As FieldInfo = type.GetField(value.ToString())
+        Dim attrs As StringValue() =
+           fi.GetCustomAttributes(GetType(StringValue),
+           False)
+
+        If attrs.Length > 0 Then
+            output = attrs(0).Value
+        End If
+        Return output
+    End Function
+
+End Class
 
 Public Class StringValue
     Inherits System.Attribute
@@ -24,23 +45,5 @@ Public Class StringValue
             Return _value
         End Get
     End Property
-End Class
 
-Public NotInheritable Class StringEnum
-    Private Sub New()
-    End Sub
-
-    Public Shared Function GetStringValue(value As [Enum]) As String
-        Dim output As String = Nothing
-        Dim type As Type = value.[GetType]()
-        Dim fi As FieldInfo = type.GetField(value.ToString())
-        Dim attrs As StringValue() =
-           TryCast(fi.GetCustomAttributes(GetType(StringValue),
-           False), StringValue())
-
-        If attrs.Length > 0 Then
-            output = attrs(0).Value
-        End If
-        Return output
-    End Function
 End Class
